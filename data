@@ -1,0 +1,26 @@
+data/exportacoes.csv
+import requests
+import pandas as pd
+
+# Endpoint da API
+url = "https://jsonplaceholder.typicode.com/users"
+
+response = requests.get(url)
+data = response.json()
+
+df = pd.DataFrame(data)
+df.head()
+# Selecionando apenas colunas relevantes
+df_transformado = df[["id", "name", "email", "address"]]
+
+# Extraindo cidade do endereço
+df_transformado["city"] = df_transformado["address"].apply(lambda x: x["city"])
+
+# Removendo coluna desnecessária
+df_transformado = df_transformado.drop(columns=["address"])
+
+df_transformado
+# Gerando relatório final
+df_transformado.to_csv("relatorio_clientes_api.csv", index=False)
+
+df_transformado
